@@ -1,33 +1,34 @@
-﻿Imports System.Data.SqlClient 'importamos la libreria pa trabajar con SQL, nada del otro mundo jeje'
-Public Class frmLECTORES
-
+﻿Imports System.Data.SqlClient
+Public Class Form1
     'este evento estaba solo pa probar la conexion '
-    '' Private Sub frmLECTORES_Load(sender As Object, e As EventArgs) Handles Me.Load 'SOLO PARA PROBAR LA CONEXION'
-    '' CONECTAR_BIBLIOTECA()
-    '' MsgBox("CONEXION EXITOSA A LA BASE DE DATOS", MsgBoxStyle.Information, "CONEXIONEXITOSA")
-    '' End Sub
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load 'SOLO PAAR PROBAR LA CONEXION
+        CONECTAR_BIBLIOTECA()
+        MsgBox("CONEXION EXITOSA A LA BASE DE DATOS", MsgBoxStyle.Information, "CONEXION EXITOSA")
+    End Sub
+
     Private Sub btnCerrar_Click(sender As Object, e As EventArgs) Handles btnCerrar.Click
         Close() 'ceramos la ventana cuando le dan al boton cerrar'
     End Sub
     'variables para arrastrar la ventana'
     Dim ex, ey As Integer 'coordenadaz internas del mouse pa saber donde arrastro la ventana'
     Dim Arrastre As Boolean ' si estoy arrastrando o no'
+
     Private Sub panellTitulo_MouseDown(sender As Object, e As MouseEventArgs) Handles panellTitulo.MouseDown
         ex = e.X 'guardamos la pos X cuando le dan click'
         ey = e.Y 'guardamos la pos Y tambien obvio'
         Arrastre = True 'permite arrastrar la ventana'
     End Sub
+
     Private Sub panellTitulo_MouseMove(sender As Object, e As MouseEventArgs) Handles panellTitulo.MouseMove
         ' movemos la ventana dependiendo de como arrastre el mouse'
-        If Arrastre Then Me.Location =
-        Me.PointToScreen(New Point(frmLECTORES.MousePosition.X - Me.Location.X - ex,
-        frmLECTORES.MousePosition.Y - Me.Location.Y - ey))
+        If Arrastre Then Location = Me.PointToScreen(New Point(Form1.MousePosition.X - Location.X - ex, Form1.MousePosition.Y - Location.Y - ey))
     End Sub
+
     Private Sub btnNuevo_Click(sender As Object, e As EventArgs) Handles btnNuevo.Click
         panelDatos.Visible = True 'mostramos el panel datos xq vamos a meter datos nuevos'
         btnGuardar.Enabled = True 'habilitamos guardar'
         btnModificar.Enabled = False 'desactivamos modificar'
-        txtIdentidad.Focus() 'ponemos el cursor directo en txtidentidad'
+        lblIdentidad.Focus() 'ponemos el cursor directo en txtidentidad'
     End Sub
     Private Sub panellTitulo_MouseUp(sender As Object, e As MouseEventArgs) Handles panellTitulo.MouseUp
         Arrastre = False 'ya no arrastramos la ventana'
@@ -51,18 +52,17 @@ Public Class frmLECTORES
     Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
         Dim cmd As New SqlCommand
         ' revisa que los datos no vengan vacios'
-        If txtNombre.Text <> " " And txtIdentidad.Text <> " " Then
+        If lblNombre.Text <> " " And lblIdentidad.Text <> " " Then
             Try
                 CONECTAR_BIBLIOTECA() 'abrimos la conexion con la BD'
-                cmd = New SqlCommand("Insertar_Lector", CONEXION) 'comando que llama el procedimintoalmacenado '
+                cmd = New SqlCommand("Insertar_Lector", CONEXION) 'comando que llama el procediminto almacenado '
                 cmd.CommandType = 4 '4 = Stored Procedure’
                 'mandamos los valores al procedimiento sobre cada parámetro '
-                cmd.Parameters.AddWithValue("@idLector", txtIdentidad.Text)
-                cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text)
-                cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text)
-                cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text)
+                cmd.Parameters.AddWithValue("@idLector", lblIdentidad.Text)
+                cmd.Parameters.AddWithValue("@Nombre", lblNombre.Text)
+                cmd.Parameters.AddWithValue("@Telefono", lblTelefono.Text)
+                cmd.Parameters.AddWithValue("@Direccion", lblDireccion.Text)
                 cmd.Parameters.AddWithValue("@Observaciones", txtObservaciones.Text)
-
                 cmd.ExecuteNonQuery() 'ejecutamos la insercion ejecutando la consulta'
                 DESCONECTAR_BIBLIOTECA() 'cerramos la conexion después de cada proceso'
                 panelDatos.Visible = False 'quitamos el panel datos'
@@ -70,13 +70,13 @@ Public Class frmLECTORES
                 mostrar() 'recargamos el grid de los datos'
             Catch ex As Exception
                 MessageBox.Show("OCURRIO UN ERROR GUARDANDO EL LECTOR" & vbCrLf & vbCrLf &
-                ex.Message, "GUARDAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+ ex.Message, "GUARDAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Else
             MessageBox.Show("LLENE IDENTIDAD Y NOMBRE COMPLETO, SON OBLIGATORIOS",
-            "SISTEMA LECTORES",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning) 'warning icono de advertencai’
+ "SISTEMA LECTORES",
+ MessageBoxButtons.OK,
+ MessageBoxIcon.Warning) 'warning icono de advertencai’
         End If
     End Sub
     Sub mostrar()
@@ -152,16 +152,16 @@ Public Class frmLECTORES
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
         'modifibcar sobre registros existentes '
         Dim cmd As New SqlCommand
-        If txtNombre.Text <> " " And txtIdentidad.Text <> " " Then
+        If lblNombre.Text <> " " And lblIdentidad.Text <> " " Then
             Try
                 CONECTAR_BIBLIOTECA()
                 cmd = New SqlCommand("Editar_Lector", CONEXION)
                 cmd.CommandType = 4
                 'se modifican directamente sobre cada espacio y se actualizalos datos'
-                cmd.Parameters.AddWithValue("@idLector", txtIdentidad.Text)
-                cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text)
-                cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text)
-                cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text)
+                cmd.Parameters.AddWithValue("@idLector", lblIdentidad.Text)
+                cmd.Parameters.AddWithValue("@Nombre", lblNombre.Text)
+                cmd.Parameters.AddWithValue("@Telefono", lblTelefono.Text)
+                cmd.Parameters.AddWithValue("@Direccion", lblDireccion.Text)
                 cmd.Parameters.AddWithValue("@Observaciones", txtObservaciones.Text)
                 cmd.ExecuteNonQuery()
                 DESCONECTAR_BIBLIOTECA()
@@ -170,25 +170,24 @@ Public Class frmLECTORES
                 mostrar()
             Catch ex As Exception
                 MessageBox.Show("ERROR MODIFICANDO EL LECTOR," & vbCrLf & vbCrLf &
-                ex.Message, "MODIFICAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+ ex.Message, "MODIFICAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Else
             MessageBox.Show("LLENE IDENTIDAD Y NOMBRE COMPLETO, OBLIGATORIO",
-            "SISTEMA LECTORES",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning)
+ "SISTEMA LECTORES",
+ MessageBoxButtons.OK,
+ MessageBoxIcon.Warning)
         End If
     End Sub
     Private Sub dataLectores_CellContentDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dataLectores.CellContentDoubleClick
         'cuando hacen doble clic cargamos los datos pa modificar'
         panelDatos.Visible = True
-
         Try
             'ojo no se toma en cuenta la posicion 0 porque es el sitio del botón de eliminar’
-            txtIdentidad.Text = dataLectores.SelectedCells.Item(1).Value
-            txtNombre.Text = dataLectores.SelectedCells.Item(2).Value
-            txtTelefono.Text = dataLectores.SelectedCells.Item(3).Value
-            txtDireccion.Text = dataLectores.SelectedCells.Item(4).Value
+            lblIdentidad.Text = dataLectores.SelectedCells.Item(1).Value
+            lblNombre.Text = dataLectores.SelectedCells.Item(2).Value
+            lblTelefono.Text = dataLectores.SelectedCells.Item(3).Value
+            lblDireccion.Text = dataLectores.SelectedCells.Item(4).Value
             txtObservaciones.Text = dataLectores.SelectedCells.Item(5).Value
             btnGuardar.Enabled = False
             btnModificar.Enabled = True
@@ -201,9 +200,9 @@ Public Class frmLECTORES
         If e.ColumnIndex = dataLectores.Columns.Item("Eliminar").Index Then
             Dim resultado As DialogResult
             resultado = MessageBox.Show("¿DESEAS ELIMINAR ESTE REGISTRO? ",
-            "ELIMINAR LECTOR?",
-            MessageBoxButtons.OKCancel,
-            MessageBoxIcon.Question)
+ "ELIMINAR LECTOR?",
+ MessageBoxButtons.OKCancel,
+ MessageBoxIcon.Question)
             If resultado = DialogResult.OK Then
                 Dim cmd As New SqlCommand
                 Try
@@ -216,7 +215,7 @@ Public Class frmLECTORES
                     mostrar() 'actualizamos la tabla '
                 Catch ex As Exception
                     MessageBox.Show("NO SE PUDO ELIMINAR EL LECTOR" & vbCrLf & vbCrLf &
-                    ex.Message, "ELIMINAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+ ex.Message, "ELIMINAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             Else
                 MsgBox("OPERACIÓN CANCELADA", vbInformation + vbOKOnly, "ELIMINACION CANCELADA")
@@ -224,3 +223,7 @@ Public Class frmLECTORES
         End If
     End Sub
 End Class
+
+
+
+
