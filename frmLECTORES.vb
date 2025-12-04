@@ -1,10 +1,5 @@
 ﻿Imports System.Data.SqlClient
 Public Class Form1
-    'este evento estaba solo pa probar la conexion '
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load 'SOLO PAAR PROBAR LA CONEXION
-        CONECTAR_BIBLIOTECA()
-        MsgBox("CONEXION EXITOSA A LA BASE DE DATOS", MsgBoxStyle.Information, "CONEXION EXITOSA")
-    End Sub
 
     Private Sub btnCerrar_Click(sender As Object, e As EventArgs) Handles btnCerrar.Click
         Close() 'ceramos la ventana cuando le dan al boton cerrar'
@@ -25,7 +20,9 @@ Public Class Form1
     End Sub
 
     Private Sub btnNuevo_Click(sender As Object, e As EventArgs) Handles btnNuevo.Click
-        panelDatos.Visible = True 'mostramos el panel datos xq vamos a meter datos nuevos'
+        panelcontenido.Visible = True 'mostramos el panel datos xq vamos a meter datos nuevos'
+        panelDatos.Visible = False 'mostramos el panel datos xq vamos a meter datos nuevos'
+
         btnGuardar.Enabled = True 'habilitamos guardar'
         btnModificar.Enabled = False 'desactivamos modificar'
         lblIdentidad.Focus() 'ponemos el cursor directo en txtidentidad'
@@ -34,9 +31,10 @@ Public Class Form1
         Arrastre = False 'ya no arrastramos la ventana'
     End Sub
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
-        btnGuardar.Enabled = True 'cuando cancela, activamos de nuevo guardar'
+        btnGuardar.Enabled = False 'cuando cancela, activamos de nuevo guardar'
         btnModificar.Enabled = True 'habilitamos modificar'
-        panelDatos.Visible = False 'ocultamos el panel de datos para ver el grid'
+        panelcontenido.Visible = False 'mostramos el panel datos xq vamos a meter datos nuevos'
+        panelDatos.Visible = True 'ocultamos el panel de datos para ver el grid'
         limpiarcampos() 'borramos todos los espacios'
     End Sub
     Private Sub limpiarcampos()
@@ -52,16 +50,16 @@ Public Class Form1
     Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
         Dim cmd As New SqlCommand
         ' revisa que los datos no vengan vacios'
-        If lblNombre.Text <> " " And lblIdentidad.Text <> " " Then
+        If txtNombre.Text <> " " And txtIdentidad.Text <> " " Then
             Try
                 CONECTAR_BIBLIOTECA() 'abrimos la conexion con la BD'
                 cmd = New SqlCommand("Insertar_Lector", CONEXION) 'comando que llama el procediminto almacenado '
                 cmd.CommandType = 4 '4 = Stored Procedure’
                 'mandamos los valores al procedimiento sobre cada parámetro '
-                cmd.Parameters.AddWithValue("@idLector", lblIdentidad.Text)
-                cmd.Parameters.AddWithValue("@Nombre", lblNombre.Text)
-                cmd.Parameters.AddWithValue("@Telefono", lblTelefono.Text)
-                cmd.Parameters.AddWithValue("@Direccion", lblDireccion.Text)
+                cmd.Parameters.AddWithValue("@idLector", txtIdentidad.Text)
+                cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text)
+                cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text)
+                cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text)
                 cmd.Parameters.AddWithValue("@Observaciones", txtObservaciones.Text)
                 cmd.ExecuteNonQuery() 'ejecutamos la insercion ejecutando la consulta'
                 DESCONECTAR_BIBLIOTECA() 'cerramos la conexion después de cada proceso'
@@ -81,9 +79,12 @@ Public Class Form1
     End Sub
     Sub mostrar()
         'metodo par mostrar todos los lectores en el grid'
+
         Dim dt As New DataTable
         Dim da As SqlDataAdapter
         Try
+            panelcontenido.Visible = False 'mostramos el panel datos xq vamos a meter datos nuevos'
+            panelDatos.Visible = True 'ocultamos el panel de datos para ver el grid'
             CONECTAR_BIBLIOTECA()
             da = New SqlDataAdapter("Mostrar_Lector", CONEXION)
             da.Fill(dt)
@@ -107,7 +108,6 @@ Public Class Form1
                 dataLectores.ColumnHeadersDefaultCellStyle = estiloEncabezado
             End If
         Catch ex As Exception
-
         End Try
     End Sub
     Private Sub buscar()
@@ -158,10 +158,10 @@ Public Class Form1
                 cmd = New SqlCommand("Editar_Lector", CONEXION)
                 cmd.CommandType = 4
                 'se modifican directamente sobre cada espacio y se actualizalos datos'
-                cmd.Parameters.AddWithValue("@idLector", lblIdentidad.Text)
-                cmd.Parameters.AddWithValue("@Nombre", lblNombre.Text)
-                cmd.Parameters.AddWithValue("@Telefono", lblTelefono.Text)
-                cmd.Parameters.AddWithValue("@Direccion", lblDireccion.Text)
+                cmd.Parameters.AddWithValue("@idLector", txtIdentidad.Text)
+                cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text)
+                cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text)
+                cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text)
                 cmd.Parameters.AddWithValue("@Observaciones", txtObservaciones.Text)
                 cmd.ExecuteNonQuery()
                 DESCONECTAR_BIBLIOTECA()
@@ -179,15 +179,15 @@ Public Class Form1
  MessageBoxIcon.Warning)
         End If
     End Sub
-    Private Sub dataLectores_CellContentDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dataLectores.CellContentDoubleClick
+    Private Sub dataLectores_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dataLectores.CellDoubleClick
         'cuando hacen doble clic cargamos los datos pa modificar'
-        panelDatos.Visible = True
+        panelcontenido.Visible = True
         Try
             'ojo no se toma en cuenta la posicion 0 porque es el sitio del botón de eliminar’
-            lblIdentidad.Text = dataLectores.SelectedCells.Item(1).Value
-            lblNombre.Text = dataLectores.SelectedCells.Item(2).Value
-            lblTelefono.Text = dataLectores.SelectedCells.Item(3).Value
-            lblDireccion.Text = dataLectores.SelectedCells.Item(4).Value
+            txtIdentidad.Text = dataLectores.SelectedCells.Item(1).Value
+            txtNombre.Text = dataLectores.SelectedCells.Item(2).Value
+            txtTelefono.Text = dataLectores.SelectedCells.Item(3).Value
+            txtDireccion.Text = dataLectores.SelectedCells.Item(4).Value
             txtObservaciones.Text = dataLectores.SelectedCells.Item(5).Value
             btnGuardar.Enabled = False
             btnModificar.Enabled = True
@@ -196,34 +196,43 @@ Public Class Form1
         End Try
     End Sub
     Private Sub dataLectores_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dataLectores.CellContentClick
-        'detectamos click en el boton eliminar dentro del grid'
-        If e.ColumnIndex = dataLectores.Columns.Item("Eliminar").Index Then
-            Dim resultado As DialogResult
-            resultado = MessageBox.Show("¿DESEAS ELIMINAR ESTE REGISTRO? ",
- "ELIMINAR LECTOR?",
- MessageBoxButtons.OKCancel,
- MessageBoxIcon.Question)
-            If resultado = DialogResult.OK Then
-                Dim cmd As New SqlCommand
-                Try
-                    CONECTAR_BIBLIOTECA()
-                    cmd = New SqlCommand("Eliminar_Lector", CONEXION)
-                    cmd.CommandType = 4
-                    cmd.Parameters.AddWithValue("@idLector", dataLectores.SelectedCells.Item(1).Value)
-                    cmd.ExecuteNonQuery()
-                    DESCONECTAR_BIBLIOTECA()
-                    mostrar() 'actualizamos la tabla '
-                Catch ex As Exception
-                    MessageBox.Show("NO SE PUDO ELIMINAR EL LECTOR" & vbCrLf & vbCrLf &
- ex.Message, "ELIMINAR LECTOR", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
-            Else
-                MsgBox("OPERACIÓN CANCELADA", vbInformation + vbOKOnly, "ELIMINACION CANCELADA")
-            End If
+
+        'Evitar error al hacer click en encabezados'
+        If e.RowIndex < 0 Then Exit Sub
+
+        'Verifica que la columna es la de eliminar'
+        If e.ColumnIndex = dataLectores.Columns("Eliminar").Index Then
+
+            Dim resultado = MessageBox.Show(
+            "¿DESEAS ELIMINAR ESTE REGISTRO?",
+            "ELIMINAR LECTOR",
+            MessageBoxButtons.OKCancel,
+            MessageBoxIcon.Question
+        )
+
+            If resultado <> DialogResult.OK Then Exit Sub
+
+            Try
+                '*** OBTENER EL ID DE MANERA SEGURA ***'
+                Dim idLector As String = dataLectores.Rows(e.RowIndex).Cells(1).Value.ToString()
+
+                CONECTAR_BIBLIOTECA()
+
+                Dim cmd As New SqlCommand("Eliminar_Lector", CONEXION)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("@idLector", idLector)
+                cmd.ExecuteNonQuery()
+
+                DESCONECTAR_BIBLIOTECA()
+
+                MessageBox.Show("Registro eliminado correctamente.", "Eliminar", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                mostrar()
+
+            Catch ex As Exception
+                MessageBox.Show("Error al eliminar: " & ex.Message)
+            End Try
+
         End If
     End Sub
 End Class
-
-
-
-

@@ -22,6 +22,7 @@ Partial Class Form1
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         panelbusqueda = New Panel()
         PictureBox1 = New PictureBox()
         txtBuscar = New TextBox()
@@ -44,12 +45,9 @@ Partial Class Form1
         lblLectores = New Label()
         panelDatos = New Panel()
         dataLectores = New DataGridView()
-        n_identidad = New DataGridViewTextBoxColumn()
-        nombre = New DataGridViewTextBoxColumn()
-        telefono = New DataGridViewTextBoxColumn()
-        direccion = New DataGridViewTextBoxColumn()
         panellateral = New Panel()
         btnNuevo = New PictureBox()
+        Eliminar = New DataGridViewButtonColumn()
         panelbusqueda.SuspendLayout()
         CType(PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
         panelcontenido.SuspendLayout()
@@ -99,7 +97,7 @@ Partial Class Form1
         panelcontenido.Controls.Add(lblTelefono)
         panelcontenido.Controls.Add(lblNombre)
         panelcontenido.Controls.Add(lblIdentidad)
-        panelcontenido.Location = New Point(0, 111)
+        panelcontenido.Location = New Point(0, 115)
         panelcontenido.Name = "panelcontenido"
         panelcontenido.Size = New Size(621, 379)
         panelcontenido.TabIndex = 18
@@ -170,7 +168,7 @@ Partial Class Form1
         ' lblObservaciones
         ' 
         lblObservaciones.AutoSize = True
-        lblObservaciones.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Bold)
+        lblObservaciones.Font = New Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold)
         lblObservaciones.Location = New Point(21, 213)
         lblObservaciones.Name = "lblObservaciones"
         lblObservaciones.Size = New Size(127, 20)
@@ -180,7 +178,7 @@ Partial Class Form1
         ' lblDireccion
         ' 
         lblDireccion.AutoSize = True
-        lblDireccion.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Bold)
+        lblDireccion.Font = New Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold)
         lblDireccion.Location = New Point(21, 163)
         lblDireccion.Name = "lblDireccion"
         lblDireccion.Size = New Size(84, 20)
@@ -190,7 +188,7 @@ Partial Class Form1
         ' lblTelefono
         ' 
         lblTelefono.AutoSize = True
-        lblTelefono.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Bold)
+        lblTelefono.Font = New Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold)
         lblTelefono.Location = New Point(21, 120)
         lblTelefono.Name = "lblTelefono"
         lblTelefono.Size = New Size(79, 20)
@@ -200,7 +198,7 @@ Partial Class Form1
         ' lblNombre
         ' 
         lblNombre.AutoSize = True
-        lblNombre.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Bold)
+        lblNombre.Font = New Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold)
         lblNombre.Location = New Point(21, 82)
         lblNombre.Name = "lblNombre"
         lblNombre.Size = New Size(149, 20)
@@ -210,7 +208,7 @@ Partial Class Form1
         ' lblIdentidad
         ' 
         lblIdentidad.AutoSize = True
-        lblIdentidad.Font = New Font("Microsoft Sans Serif", 12F, FontStyle.Bold)
+        lblIdentidad.Font = New Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold)
         lblIdentidad.Location = New Point(21, 43)
         lblIdentidad.Name = "lblIdentidad"
         lblIdentidad.Size = New Size(102, 20)
@@ -228,7 +226,7 @@ Partial Class Form1
         ' 
         ' btnCerrar
         ' 
-        btnCerrar.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnCerrar.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         btnCerrar.Location = New Point(573, 8)
         btnCerrar.Name = "btnCerrar"
         btnCerrar.Size = New Size(36, 35)
@@ -239,7 +237,7 @@ Partial Class Form1
         ' lblLectores
         ' 
         lblLectores.AutoSize = True
-        lblLectores.Font = New Font("Microsoft Sans Serif", 18F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblLectores.Font = New Font("Microsoft Sans Serif", 18.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         lblLectores.Location = New Point(34, 8)
         lblLectores.Name = "lblLectores"
         lblLectores.Size = New Size(114, 29)
@@ -249,7 +247,7 @@ Partial Class Form1
         ' panelDatos
         ' 
         panelDatos.Controls.Add(dataLectores)
-        panelDatos.Location = New Point(35, 47)
+        panelDatos.Location = New Point(37, 115)
         panelDatos.Name = "panelDatos"
         panelDatos.Size = New Size(473, 443)
         panelDatos.TabIndex = 19
@@ -257,35 +255,11 @@ Partial Class Form1
         ' dataLectores
         ' 
         dataLectores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dataLectores.Columns.AddRange(New DataGridViewColumn() {n_identidad, nombre, telefono, direccion})
+        dataLectores.Columns.AddRange(New DataGridViewColumn() {Eliminar})
         dataLectores.Location = New Point(3, 4)
         dataLectores.Name = "dataLectores"
         dataLectores.Size = New Size(450, 366)
         dataLectores.TabIndex = 0
-        ' 
-        ' n_identidad
-        ' 
-        n_identidad.HeaderText = "N Identidad"
-        n_identidad.Name = "n_identidad"
-        n_identidad.ReadOnly = True
-        ' 
-        ' nombre
-        ' 
-        nombre.HeaderText = "Nombre"
-        nombre.Name = "nombre"
-        nombre.ReadOnly = True
-        ' 
-        ' telefono
-        ' 
-        telefono.HeaderText = "Telefono"
-        telefono.Name = "telefono"
-        telefono.ReadOnly = True
-        ' 
-        ' direccion
-        ' 
-        direccion.HeaderText = "Direccion"
-        direccion.Name = "direccion"
-        direccion.ReadOnly = True
         ' 
         ' panellateral
         ' 
@@ -297,15 +271,24 @@ Partial Class Form1
         ' 
         ' btnNuevo
         ' 
-        btnNuevo.Location = New Point(6, 174)
+        btnNuevo.Image = CType(resources.GetObject("btnNuevo.Image"), Image)
+        btnNuevo.Location = New Point(38, 203)
         btnNuevo.Name = "btnNuevo"
-        btnNuevo.Size = New Size(98, 82)
+        btnNuevo.Size = New Size(66, 53)
+        btnNuevo.SizeMode = PictureBoxSizeMode.StretchImage
         btnNuevo.TabIndex = 0
         btnNuevo.TabStop = False
         ' 
+        ' Eliminar
+        ' 
+        Eliminar.HeaderText = "Column1"
+        Eliminar.Name = "Eliminar"
+        Eliminar.Resizable = DataGridViewTriState.True
+        Eliminar.SortMode = DataGridViewColumnSortMode.Automatic
+        ' 
         ' Form1
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(621, 491)
         Controls.Add(panelcontenido)
@@ -351,10 +334,7 @@ Partial Class Form1
     Friend WithEvents lblLectores As Label
     Friend WithEvents panelDatos As Panel
     Friend WithEvents dataLectores As DataGridView
-    Friend WithEvents n_identidad As DataGridViewTextBoxColumn
-    Friend WithEvents nombre As DataGridViewTextBoxColumn
-    Friend WithEvents telefono As DataGridViewTextBoxColumn
-    Friend WithEvents direccion As DataGridViewTextBoxColumn
     Friend WithEvents panellateral As Panel
     Friend WithEvents btnNuevo As PictureBox
+    Friend WithEvents Eliminar As DataGridViewButtonColumn
 End Class

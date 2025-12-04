@@ -4,7 +4,7 @@ Imports System.Configuration
 
 Module CONEXION_BIBLIOTECA
 
-    Public CONEXION As New SqlConnection("Server=localhost; Database=DB_CRUD_VB_SQLSERVER_BIBLIOTECJA_ASPNET;User Id=kevin;Password=Sack0602")
+    Public CONEXION As New SqlConnection("Server=localhost; Database=DB_CRUD_VB_SQLSERVER_BIBLIOTECJA_ASPNET;User Id=kevin;Password=12345")
 
     Public Sub CONECTAR_BIBLIOTECA()
         Try
